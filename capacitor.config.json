@@ -1,0 +1,13 @@
+{
+  "appId": "com.agentsproperty.app",
+  "appName": "SuperSplat Mobile",
+  "webDir": "www",
+  "server": {
+    "hostname": "superspl.at",
+    "androidScheme": "https",
+    "allowNavigation": ["superspl.at"]
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

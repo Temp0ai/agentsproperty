@@ -1,0 +1,19 @@
+{
+  "name": "agentsproperty",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "sync": "npx cap copy && npx cap sync",
+    "open:android": "npx cap open android",
+    "build:android": "cd android && ./gradlew assembleDebug"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "SuperSplat Mobile - 3D Gaussian Splat Editor for Android",
+  "dependencies": {
+    "@capacitor/android": "^8.4.0",
+    "@capacitor/cli": "^8.4.0",
+    "@capacitor/core": "^8.4.0"
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AgentsProperty</string>
+    <string name="title_activity_main">AgentsProperty</string>
+    <string name="package_name">com.agentsproperty.app</string>
+    <string name="custom_url_scheme">com.agentsproperty.app</string>
+</resources>

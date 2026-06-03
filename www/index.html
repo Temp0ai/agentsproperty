@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>SuperSplat Mobile</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    #splash {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; background: #111; color: #fff;
+      z-index: 9999; transition: opacity 0.5s;
+    }
+    #splash.hidden { opacity: 0; pointer-events: none; }
+    #splash h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    #splash p { font-size: 0.85rem; color: #888; }
+    .spinner { width: 32px; height: 32px; border: 3px solid #333; border-top-color: #4a9eff; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #webview { width: 100%; height: 100%; border: none; }
+    #top-bar {
+      position: fixed; top: 0; left: 0; right: 0; height: 44px;
+      background: rgba(17,17,17,0.92); backdrop-filter: blur(10px);
+      display: flex; align-items: center; padding: 0 12px; z-index: 1000;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    #top-bar .title { color: #fff; font-size: 0.9rem; font-weight: 600; flex: 1; text-align: center; }
+    #top-bar button {
+      background: none; border: none; color: #4a9eff; font-size: 0.85rem;
+      padding: 6px 10px; border-radius: 6px; -webkit-tap-highlight-color: transparent;
+    }
+    #top-bar button:active { background: rgba(255,255,255,0.1); }
+    #bottom-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 50px;
+      background: rgba(17,17,17,0.92); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: space-around;
+      z-index: 1000; padding: 0 8px; border-top: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    #bottom-bar button {
+      background: none; border: none; color: #888; font-size: 0.7rem;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      padding: 6px 12px; border-radius: 8px; -webkit-tap-highlight-color: transparent;
+      transition: color 0.2s;
+    }
+    #bottom-bar button.active { color: #4a9eff; }
+    #bottom-bar button:active { background: rgba(255,255,255,0.08); }
+    #bottom-bar button svg { width: 22px; height: 22px; }
+    iframe { width: 100%; height: 100%; border: none; margin-top: 44px; margin-bottom: 50px; }
+  </style>
+</head>
+<body>
+  <div id="splash">
+    <div class="spinner"></div>
+    <h1>SuperSplat Mobile</h1>
+    <p>Loading editor...</p>
+  </div>
+
+  <div id="top-bar">
+    <button id="backBtn">← Back</button>
+    <span class="title">SuperSplat</span>
+    <button id="refreshBtn">↻</button>
+  </div>
+
+  <iframe id="supersplat-frame" src="https://superspl.at/editor"></iframe>
+
+  <div id="bottom-bar">
+    <button id="navFiles" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+      <span>Files</span>
+    </button>
+    <button id="navTools">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <span>Tools</span>
+    </button>
+    <button id="navView">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/></svg>
+      <span>View</span>
+    </button>
+    <button id="navExport">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      <span>Export</span>
+    </button>
+  </div>
+
+  <script>
+    const splash = document.getElementById('splash');
+    const frame = document.getElementById('supersplat-frame');
+
+    frame.addEventListener('load', () => {
+      setTimeout(() => splash.classList.add('hidden'), 500);
+    });
+
+    setTimeout(() => splash.classList.add('hidden'), 8000);
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      if (frame.contentWindow.history.length > 1) {
+        frame.contentWindow.history.back();
+      }
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      frame.src = frame.src;
+    });
+
+    document.querySelectorAll('#bottom-bar button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('#bottom-bar button').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        frame.contentWindow.postMessage({
+          type: 'supersplat-navigate',
+          tab: this.id.replace('nav', '').toLowerCase()
+        }, '*');
+      });
+    });
+  </script>
+</body>
+</html>
