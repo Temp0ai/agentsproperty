@@ -3,6 +3,8 @@ package com.agentsproperty.app;
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.view.View;
+import android.view.WindowManager;
 import com.getcapacitor.BridgeActivity;
 
 public class MainActivity extends BridgeActivity {
@@ -17,13 +19,17 @@ public class MainActivity extends BridgeActivity {
             settings.setDomStorageEnabled(true);
             settings.setDatabaseEnabled(true);
             settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-            settings.setMediaPlaybackRequiresUserGesture(false);
             settings.setAllowFileAccess(true);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-            }
-            WebView.setWebContentsDebuggingEnabled(true);
+            settings.setMediaPlaybackRequiresUserGesture(false);
+            settings.setLoadWithOverviewMode(true);
+            settings.setUseWideViewPort(true);
+
+            webView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+            webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
+            webView.setBackgroundColor(0xFF000000);
         }
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }
